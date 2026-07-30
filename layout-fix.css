@@ -1,121 +1,407 @@
-/* Screen layout: use the browser width. Print/PDF remain fixed to A4. */
-:root {
-  --screen-page-x: clamp(20px, 4vw, 72px);
-  --field-label-width: 62px;
+/*
+ * Screen mode is optimized for writing: full browser width, readable type,
+ * and consistent control baselines. Print/PDF keep the compact A4 layout
+ * from style.css.
+ */
+
+@media screen {
+  :root {
+    --screen-page-x: clamp(24px, 4vw, 72px);
+    --screen-label-width: 84px;
+    --screen-control-height: 44px;
+    --screen-writing-line: 34px;
+  }
+
+  html,
+  body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    padding: 0;
+    background: #ffffff;
+  }
+
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    width: 100%;
+    margin: 0;
+    padding: 10px clamp(14px, 3vw, 40px);
+    border: 0;
+    border-bottom: 1px solid #d7dee7;
+    border-radius: 0;
+    box-shadow: 0 2px 10px rgba(16, 24, 40, .06);
+  }
+
+  .toolbar__status {
+    font-size: 13px;
+  }
+
+  .toolbar button {
+    min-height: 40px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+
+  /* The writing view is fluid. Export/print classes deliberately opt out. */
+  .sheet:not(.is-exporting):not(.is-printing) {
+    width: 100%;
+    max-width: none;
+    min-height: calc(100vh - 61px);
+    height: auto;
+    margin: 0;
+    padding: 30px var(--screen-page-x) 54px;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .header {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 32vw);
+    align-items: end;
+    gap: clamp(36px, 6vw, 96px);
+    padding: 0 0 20px;
+    border-bottom-width: 2px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .kicker {
+    margin-bottom: 10px;
+    font-size: 13px;
+    letter-spacing: .22em;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .document-title {
+    gap: 10px;
+    font-size: 38px;
+    line-height: 1.1;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .record-no {
+    width: 92px;
+    height: 48px;
+    padding: 0 8px;
+    border-bottom-width: 2px;
+    font-size: 30px;
+    line-height: 48px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .writer-block,
+  .sheet:not(.is-exporting):not(.is-printing) .field,
+  .sheet:not(.is-exporting):not(.is-printing) .field--period,
+  .sheet:not(.is-exporting):not(.is-printing) .field--genre {
+    grid-template-columns: var(--screen-label-width) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  /* Labels and controls share exactly the same row height and line-height. */
+  .sheet:not(.is-exporting):not(.is-printing) .writer-block label,
+  .sheet:not(.is-exporting):not(.is-printing) .field label,
+  .sheet:not(.is-exporting):not(.is-printing) .field-label {
+    display: block;
+    min-height: 0;
+    height: var(--screen-control-height);
+    padding: 0;
+    font-size: 16px;
+    line-height: var(--screen-control-height);
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .writer-block input,
+  .sheet:not(.is-exporting):not(.is-printing) .line-input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: var(--screen-control-height);
+    padding: 0 8px;
+    border-bottom-width: 1px;
+    font-size: 16px;
+    line-height: var(--screen-control-height);
+    font-weight: 500;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .book-info {
+    margin-top: 24px;
+    padding: 22px 26px 20px;
+    border-left-width: 6px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .info-title {
+    margin: 0 0 18px;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .info-grid {
+    gap: 14px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .info-row {
+    width: 100%;
+    align-items: stretch;
+    gap: clamp(24px, 2.8vw, 48px);
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .info-row--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .info-row--two {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .period-inputs {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .period-inputs span {
+    height: var(--screen-control-height);
+    padding: 0;
+    text-align: center;
+    font-size: 14px;
+    line-height: var(--screen-control-height);
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .genre-row {
+    width: 100%;
+    min-height: var(--screen-control-height);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .genre-option {
+    gap: 7px;
+    font-size: 15px;
+    line-height: 1.3;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .genre-option input {
+    width: 18px;
+    height: 18px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .sections {
+    width: 100%;
+    margin-top: 18px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .section {
+    width: 100%;
+    padding: 18px 0 22px;
+    border-bottom-width: 1px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .section:first-child {
+    padding-top: 0;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .section-head {
+    display: grid;
+    grid-template-columns: 38px auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    margin-bottom: 10px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .section-no {
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .section-title {
+    font-size: 18px;
+    line-height: 1.35;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .section-guide {
+    font-size: 14px;
+    line-height: 1.45;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .lined-textarea,
+  .sheet:not(.is-exporting):not(.is-printing) .plain-textarea {
+    width: 100%;
+    display: block;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 17px;
+    font-weight: 500;
+    overflow: hidden;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .lined-textarea {
+    line-height: var(--screen-writing-line);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--screen-writing-line) - 1px),
+      var(--line) calc(var(--screen-writing-line) - 1px),
+      var(--line) var(--screen-writing-line)
+    );
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .h-1 {
+    height: 40px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .h-2 {
+    height: 74px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .plain-textarea {
+    height: 66px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-width: 1px;
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .takeaway-list {
+    gap: 6px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .takeaway-row {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .takeaway-row span {
+    padding-top: 10px;
+    font-size: 16px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .prompt-stack {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .mini-prompt {
+    width: 100%;
+    grid-template-columns: 154px minmax(0, 1fr);
+    align-items: start;
+    gap: 16px;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .mini-prompt label {
+    padding-top: 9px;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .sheet:not(.is-exporting):not(.is-printing) .footer-note {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top-width: 1px;
+    font-size: 12px;
+  }
+
+  @media (max-width: 1180px) {
+    .sheet:not(.is-exporting):not(.is-printing) .header {
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 38vw);
+      gap: 36px;
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .info-row--three {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .info-row--three .field:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 800px) {
+    :root {
+      --screen-page-x: 18px;
+      --screen-label-width: 78px;
+    }
+
+    .toolbar {
+      position: static;
+      padding: 10px 12px;
+    }
+
+    .toolbar__status {
+      display: none;
+    }
+
+    .toolbar__actions {
+      width: 100%;
+    }
+
+    .toolbar button {
+      flex: 1 1 0;
+      padding: 0 8px;
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) {
+      min-height: auto;
+      padding-top: 22px;
+      padding-bottom: 36px;
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .header {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .document-title {
+      font-size: 32px;
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .writer-block {
+      width: 100%;
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .info-row--three,
+    .sheet:not(.is-exporting):not(.is-printing) .info-row--two {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .info-row--three .field:last-child {
+      grid-column: auto;
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .section-head {
+      grid-template-columns: 38px minmax(0, 1fr);
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .section-guide {
+      grid-column: 2;
+      margin-top: -4px;
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .mini-prompt {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 4px;
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .mini-prompt label {
+      padding-top: 0;
+    }
+
+    .sheet:not(.is-exporting):not(.is-printing) .footer-note {
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
 }
 
-html,
-body {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-body { padding: 0; }
-
-.toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  width: 100%;
-  margin: 0;
-  padding: 10px clamp(14px, 3vw, 40px);
-  border: 0;
-  border-bottom: 1px solid #d7dee7;
-  border-radius: 0;
-}
-
-.sheet {
-  width: 100%;
-  max-width: none;
-  min-height: calc(100vh - 59px);
-  height: auto;
-  margin: 0;
-  padding: 28px var(--screen-page-x) 36px;
-  box-shadow: none;
-  overflow: visible;
-}
-
-.header {
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 34vw);
-  gap: clamp(28px, 5vw, 80px);
-}
-
-.writer-block,
-.field,
-.field--period,
-.field--genre {
-  grid-template-columns: var(--field-label-width) minmax(0, 1fr);
-  gap: 10px;
-}
-
-.writer-block label,
-.field label,
-.field-label {
-  display: flex;
-  align-items: flex-end;
-  min-height: 6.3mm;
-  padding-bottom: 1mm;
-}
-
-.writer-block input,
-.line-input {
-  display: block;
-  width: 100%;
-  min-width: 0;
-}
-
-.book-info {
-  padding-left: clamp(16px, 2vw, 28px);
-  padding-right: clamp(16px, 2vw, 28px);
-}
-
-.info-row {
-  width: 100%;
-  gap: clamp(18px, 2.4vw, 38px);
-}
-
-.info-row--three {
-  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr) minmax(0, 1fr);
-}
-
-.info-row--two {
-  grid-template-columns: minmax(0, 2.45fr) minmax(0, 1fr);
-}
-
-.period-inputs {
-  width: 100%;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-}
-
-.genre-row {
-  width: 100%;
-  flex-wrap: wrap;
-  gap: 1.8mm 4mm;
-}
-
-.sections,
-.section,
-.lined-textarea,
-.plain-textarea {
-  width: 100%;
-}
-
-.section-head {
-  display: grid;
-  grid-template-columns: 7.2mm auto minmax(0, 1fr);
-  align-items: center;
-}
-
-.section-guide {
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-}
-
-.prompt-stack,
-.mini-prompt { width: 100%; }
-
-/* html2canvas PDF capture must always use the actual A4 geometry. */
+/* html2canvas PDF capture always uses the actual A4 geometry. */
 .sheet.is-exporting {
   width: 210mm;
   max-width: 210mm;
@@ -139,7 +425,9 @@ body { padding: 0; }
   grid-template-columns: minmax(0, 2.55fr) minmax(0, 1fr);
 }
 
-.sheet.is-exporting .info-row--three .field:last-child { grid-column: auto; }
+.sheet.is-exporting .info-row--three .field:last-child {
+  grid-column: auto;
+}
 
 .sheet.is-exporting .writer-block,
 .sheet.is-exporting .field,
@@ -151,82 +439,6 @@ body { padding: 0; }
 .sheet.is-exporting .field--period {
   grid-template-columns: 16mm minmax(0, 1fr);
   gap: 2mm;
-}
-
-@media screen and (max-width: 1100px) {
-  .info-row--three {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-
-  .info-row--three .field:last-child { grid-column: 1 / -1; }
-}
-
-@media screen and (max-width: 760px) {
-  .toolbar {
-    position: static;
-    padding: 10px 12px;
-  }
-
-  .toolbar__status { display: none; }
-  .toolbar__actions { width: 100%; }
-  .toolbar button {
-    flex: 1 1 0;
-    padding: 0 8px;
-  }
-
-  .sheet {
-    width: 100%;
-    min-height: auto;
-    padding: 22px 18px 30px;
-  }
-
-  .header {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 18px;
-  }
-
-  .writer-block { width: 100%; }
-
-  .info-row--three,
-  .info-row--two {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .info-row--three .field:last-child { grid-column: auto; }
-
-  .writer-block,
-  .field,
-  .field--period,
-  .field--genre {
-    grid-template-columns: 66px minmax(0, 1fr);
-    gap: 10px;
-  }
-
-  .genre-row { gap: 2.2mm 4.5mm; }
-
-  .section-head {
-    grid-template-columns: 7.2mm minmax(0, 1fr);
-    align-items: center;
-  }
-
-  .section-title { white-space: normal; }
-
-  .section-guide {
-    grid-column: 2;
-    margin-top: -1mm;
-  }
-
-  .mini-prompt {
-    grid-template-columns: minmax(0, 1fr);
-    gap: .8mm;
-  }
-
-  .mini-prompt label { padding-top: 0; }
-
-  .footer-note {
-    flex-direction: column;
-    gap: 4px;
-  }
 }
 
 @media print {
@@ -260,7 +472,9 @@ body { padding: 0; }
     grid-template-columns: minmax(0, 2.55fr) minmax(0, 1fr);
   }
 
-  .info-row--three .field:last-child { grid-column: auto; }
+  .info-row--three .field:last-child {
+    grid-column: auto;
+  }
 
   .writer-block,
   .field,
