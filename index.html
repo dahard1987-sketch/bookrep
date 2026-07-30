@@ -1,734 +1,168 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>독서록 작성지</title>
-  <style>
-    :root {
-      --ink: #162033;
-      --ink-2: #334155;
-      --muted: #6b7280;
-      --line: #cfd6df;
-      --line-strong: #9ca7b5;
-      --paper: #ffffff;
-      --screen: #e9edf2;
-      --accent: #315b8a;
-      --accent-soft: #edf3f8;
-      --font: "Asta", "Noto Sans KR", "Noto Sans CJK KR", system-ui, sans-serif;
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      font-family: var(--font);
-      color: var(--ink);
-      background: var(--screen);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-
-    body { padding: 20px; }
-
-    button, input, textarea { font: inherit; }
-
-    .toolbar {
-      width: min(210mm, 100%);
-      margin: 0 auto 12px;
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: #fff;
-      border: 1px solid #d8dee6;
-      box-shadow: 0 6px 24px rgba(20, 32, 51, 0.08);
-    }
-
-    .toolbar__status {
-      min-width: 0;
-      font-size: 12px;
-      line-height: 1.4;
-      color: var(--muted);
-    }
-
-    .toolbar__actions {
-      display: flex;
-      gap: 8px;
-      flex: 0 0 auto;
-    }
-
-    .toolbar button {
-      min-height: 36px;
-      padding: 0 14px;
-      border: 1px solid #aeb8c5;
-      background: #fff;
-      color: var(--ink);
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .toolbar button:hover { background: #f7f9fb; }
-
-    .toolbar button.primary {
-      border-color: var(--accent);
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .sheet {
-      width: 210mm;
-      min-height: 297mm;
-      margin: 0 auto;
-      padding: 11mm 12mm 10mm;
-      background: var(--paper);
-      box-shadow: 0 10px 36px rgba(20, 32, 51, 0.14);
-    }
-
-    .topbar {
-      height: 3mm;
-      margin: -11mm -12mm 8mm;
-      background: var(--accent);
-    }
-
-    .header {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: end;
-      gap: 12mm;
-      padding-bottom: 5mm;
-      border-bottom: 0.45mm solid var(--ink);
-    }
-
-    .title-wrap { min-width: 0; }
-
-    .kicker {
-      margin: 0 0 1.3mm;
-      font-size: 8.5px;
-      line-height: 1;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      color: var(--accent);
-    }
-
-    .document-title {
-      margin: 0;
-      display: flex;
-      align-items: baseline;
-      gap: 2.2mm;
-      font-size: 23px;
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: -0.055em;
-    }
-
-    .record-no {
-      width: 15mm;
-      height: 8mm;
-      padding: 0 1mm;
-      border: 0;
-      border-bottom: 0.35mm solid var(--ink);
-      outline: none;
-      background: transparent;
-      color: inherit;
-      text-align: center;
-      font-weight: 800;
-    }
-
-    .writer-block {
-      width: 61mm;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      align-items: end;
-      gap: 2.4mm;
-      font-size: 9.5px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .writer-block input {
-      min-width: 0;
-      height: 7mm;
-      padding: 0 1mm 0.6mm;
-      border: 0;
-      border-bottom: 0.3mm solid var(--ink);
-      outline: none;
-      background: transparent;
-      color: var(--ink);
-    }
-
-    .book-info {
-      margin-top: 5mm;
-      padding: 4mm 4.5mm 3.8mm;
-      background: var(--accent-soft);
-      border-left: 1.2mm solid var(--accent);
-    }
-
-    .info-title {
-      margin: 0 0 3mm;
-      font-size: 10.2px;
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1.45fr 1fr 1fr;
-      gap: 2.8mm 4mm;
-    }
-
-    .field {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      align-items: end;
-      gap: 2mm;
-      min-width: 0;
-    }
-
-    .field.span-2 { grid-column: span 2; }
-    .field.span-3 { grid-column: 1 / -1; }
-
-    .field label,
-    .field-label {
-      font-size: 8.5px;
-      line-height: 1.2;
-      font-weight: 700;
-      color: var(--ink-2);
-      white-space: nowrap;
-    }
-
-    .line-input {
-      width: 100%;
-      min-width: 0;
-      height: 6mm;
-      padding: 0 0.8mm 0.5mm;
-      border: 0;
-      border-bottom: 0.25mm solid var(--line-strong);
-      outline: none;
-      background: transparent;
-      color: var(--ink);
-      font-size: 9.2px;
-      font-weight: 500;
-    }
-
-    .period-inputs {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: end;
-      gap: 1.5mm;
-      min-width: 0;
-    }
-
-    .period-inputs span {
-      padding-bottom: 1mm;
-      font-size: 8px;
-      color: var(--muted);
-    }
-
-    .genre-row {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1.5mm 3.2mm;
-      min-height: 6mm;
-    }
-
-    .genre-option {
-      display: inline-flex;
-      align-items: center;
-      gap: 1mm;
-      font-size: 8.3px;
-      line-height: 1.2;
-      color: var(--ink-2);
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .genre-option input {
-      width: 3mm;
-      height: 3mm;
-      margin: 0;
-      accent-color: var(--accent);
-    }
-
-    .sections {
-      margin-top: 4.6mm;
-    }
-
-    .section {
-      display: grid;
-      grid-template-columns: 8mm 1fr;
-      gap: 3mm;
-      padding: 3.1mm 0 2.9mm;
-      border-bottom: 0.2mm solid var(--line);
-      break-inside: avoid;
-    }
-
-    .section:first-child { padding-top: 0; }
-    .section:last-child { border-bottom: 0; padding-bottom: 0; }
-
-    .section-no {
-      width: 6.8mm;
-      height: 6.8mm;
-      display: grid;
-      place-items: center;
-      margin-top: 0.2mm;
-      background: var(--accent);
-      color: #fff;
-      font-size: 8.6px;
-      line-height: 1;
-      font-weight: 800;
-    }
-
-    .section-body { min-width: 0; }
-
-    .section-head {
-      display: flex;
-      align-items: baseline;
-      gap: 2.2mm;
-      margin-bottom: 1.7mm;
-    }
-
-    .section-title {
-      margin: 0;
-      font-size: 10.2px;
-      line-height: 1.25;
-      font-weight: 800;
-      letter-spacing: -0.025em;
-    }
-
-    .section-guide {
-      margin: 0;
-      font-size: 7.6px;
-      line-height: 1.35;
-      color: var(--muted);
-      letter-spacing: -0.015em;
-    }
-
-    .lined-textarea,
-    .plain-textarea {
-      width: 100%;
-      resize: none;
-      outline: none;
-      color: var(--ink);
-      font-family: var(--font);
-      font-size: 9.2px;
-      line-height: 5.3mm;
-      font-weight: 500;
-      caret-color: var(--accent);
-    }
-
-    .lined-textarea {
-      padding: 0 1mm;
-      border: 0;
-      background-color: transparent;
-      background-image: repeating-linear-gradient(
-        to bottom,
-        transparent 0,
-        transparent calc(5.3mm - 0.22mm),
-        var(--line) calc(5.3mm - 0.22mm),
-        var(--line) 5.3mm
-      );
-      overflow: hidden;
-    }
-
-    .plain-textarea {
-      min-height: 9mm;
-      padding: 1.6mm 2mm;
-      border: 0.22mm solid var(--line);
-      background: #fbfcfd;
-      line-height: 1.45;
-      overflow: hidden;
-    }
-
-    .h-1 { height: 5.3mm; }
-    .h-2 { height: 10.6mm; }
-    .h-3 { height: 15.9mm; }
-
-    .takeaway-list {
-      display: grid;
-      gap: 0.7mm;
-    }
-
-    .takeaway-row {
-      display: grid;
-      grid-template-columns: 5mm 1fr;
-      align-items: start;
-    }
-
-    .takeaway-row span {
-      padding-top: 1.1mm;
-      font-size: 8.7px;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .split-prompts {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4mm;
-    }
-
-    .mini-prompt {
-      min-width: 0;
-    }
-
-    .mini-prompt label {
-      display: block;
-      margin-bottom: 0.8mm;
-      font-size: 8px;
-      line-height: 1.3;
-      font-weight: 700;
-      color: var(--ink-2);
-    }
-
-    .footer-note {
-      margin-top: 3.2mm;
-      padding-top: 2.5mm;
-      border-top: 0.2mm solid var(--line);
-      display: flex;
-      justify-content: space-between;
-      gap: 8mm;
-      font-size: 7.4px;
-      line-height: 1.4;
-      color: var(--muted);
-    }
-
-    input::placeholder,
-    textarea::placeholder { color: #a7afb9; opacity: 1; }
-
-    input:focus,
-    textarea:focus {
-      background-color: rgba(49, 91, 138, 0.035);
-    }
-
-    @page {
-      size: A4 portrait;
-      margin: 0;
-    }
-
-    @media print {
-      html, body {
-        width: 210mm;
-        min-height: 297mm;
-        background: #fff;
-      }
-
-      body { padding: 0; }
-      .toolbar { display: none !important; }
-
-      .sheet {
-        width: 210mm;
-        min-height: 297mm;
-        margin: 0;
-        box-shadow: none;
-      }
-
-      .line-input,
-      .record-no,
-      .writer-block input,
-      .lined-textarea,
-      .plain-textarea {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .topbar,
-      .book-info,
-      .section-no {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-    }
-
-    @media (max-width: 900px) {
-      body { padding: 0; background: #fff; }
-      .toolbar {
-        width: 100%;
-        margin: 0;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-      }
-      .toolbar__status { display: none; }
-      .sheet {
-        width: 210mm;
-        margin: 0 auto;
-        box-shadow: none;
-        transform-origin: top center;
-      }
-    }
-  </style>
-<script type="text/javascript" nonce="8c799d715d36441f969c54434eb" src="//local.adguard.org?ts=1785388896936&amp;type=content-script&amp;dmn=chatgpt.com&amp;url=https%3A%2F%2Fchatgpt.com%2Fbackend-api%2Festuary%2Fcontent%3Fid%3Dfile_000000009ac48209a65b1054181ed682%26fn%3Dreading_log_a4_clean.html%26cd%3Dattachment%26ts%3D495941%26p%3Dfs%26cid%3D1%26sig%3Daf70fd91aa5db3f3268ace5d439a1bb849c564bf3412b6ec03bfa6950c1251f4%26v%3D0&amp;app=chrome.exe&amp;css=2&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1"></script><script type="text/javascript" nonce="8c799d715d36441f969c54434eb" src="//local.adguard.org?ts=1785388896936&amp;name=AdGuard%20Extra&amp;name=AdGuard%20Popup%20Blocker&amp;type=user-script"></script></head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>독서록 작성지</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/></head>
 <body>
-  <div class="toolbar" aria-label="문서 도구">
-    <div class="toolbar__status" id="saveStatus">입력한 내용은 이 브라우저에 자동 저장됩니다.</div>
-    <div class="toolbar__actions">
-      <button type="button" id="clearBtn">전체 지우기</button>
-      <button type="button" class="primary" id="printBtn">A4로 인쇄</button>
-    </div>
-  </div>
-
-  <main class="sheet" id="sheet">
-    <div class="topbar"></div>
-
-    <header class="header">
-      <div class="title-wrap">
-        <p class="kicker">READING RECORD</p>
-        <h1 class="document-title">
-          독서록
-          <span>#</span>
-          <input class="record-no" id="recordNo" name="recordNo" type="text" inputmode="numeric" maxlength="3" value="1" aria-label="독서록 번호" />
-        </h1>
-      </div>
-
-      <div class="writer-block">
-        <label for="writerName">작성자</label>
-        <input id="writerName" name="writerName" type="text" autocomplete="name" placeholder="이름" />
-      </div>
-    </header>
-
-    <section class="book-info" aria-labelledby="bookInfoTitle">
-      <h2 class="info-title" id="bookInfoTitle">1. 도서 정보</h2>
-      <div class="info-grid">
-        <div class="field">
-          <label for="bookTitle">책 제목</label>
-          <input class="line-input" id="bookTitle" name="bookTitle" type="text" />
-        </div>
-        <div class="field">
-          <label for="bookAuthor">저자</label>
-          <input class="line-input" id="bookAuthor" name="bookAuthor" type="text" />
-        </div>
-        <div class="field">
-          <label for="publisher">출판사</label>
-          <input class="line-input" id="publisher" name="publisher" type="text" />
-        </div>
-
-        <div class="field span-2">
-          <span class="field-label">읽은 기간</span>
-          <div class="period-inputs">
-            <input class="line-input" id="dateStart" name="dateStart" type="text" inputmode="numeric" placeholder="YYYY. MM. DD." aria-label="읽기 시작일" />
-            <span>부터</span>
-            <input class="line-input" id="dateEnd" name="dateEnd" type="text" inputmode="numeric" placeholder="YYYY. MM. DD." aria-label="읽기 종료일" />
-          </div>
-        </div>
-        <div class="field">
-          <label for="translator">옮긴이</label>
-          <input class="line-input" id="translator" name="translator" type="text" />
-        </div>
-
-        <div class="field span-3">
-          <span class="field-label">분야</span>
-          <div class="genre-row" role="radiogroup" aria-label="도서 분야">
-            <label class="genre-option"><input type="radio" name="genre" value="진로·전공" />진로·전공</label>
-            <label class="genre-option"><input type="radio" name="genre" value="사회·역사" />사회·역사</label>
-            <label class="genre-option"><input type="radio" name="genre" value="과학·수학" />과학·수학</label>
-            <label class="genre-option"><input type="radio" name="genre" value="문학" />문학</label>
-            <label class="genre-option"><input type="radio" name="genre" value="인문·철학" />인문·철학</label>
-            <label class="genre-option"><input type="radio" name="genre" value="기타" />기타</label>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="sections">
-      <section class="section">
-        <div class="section-no">2</div>
-        <div class="section-body">
-          <div class="section-head">
-            <h2 class="section-title">이 책을 선택한 이유</h2>
-            <p class="section-guide">읽게 된 계기나 나의 관심 분야와 연결하여 쓰세요.</p>
-          </div>
-          <textarea class="lined-textarea h-2 fit-text" id="reasonForChoice" name="reasonForChoice" aria-label="이 책을 선택한 이유"></textarea>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-no">3</div>
-        <div class="section-body">
-          <div class="section-head">
-            <h2 class="section-title">핵심 내용 정리</h2>
-            <p class="section-guide">책에서 중요하다고 생각한 내용을 세 가지로 정리하세요.</p>
-          </div>
-          <div class="takeaway-list">
-            <div class="takeaway-row"><span>①</span><textarea class="lined-textarea h-1 fit-text" id="keyPoint1" name="keyPoint1" aria-label="핵심 내용 1"></textarea></div>
-            <div class="takeaway-row"><span>②</span><textarea class="lined-textarea h-1 fit-text" id="keyPoint2" name="keyPoint2" aria-label="핵심 내용 2"></textarea></div>
-            <div class="takeaway-row"><span>③</span><textarea class="lined-textarea h-1 fit-text" id="keyPoint3" name="keyPoint3" aria-label="핵심 내용 3"></textarea></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-no">4</div>
-        <div class="section-body">
-          <div class="section-head">
-            <h2 class="section-title">인상 깊은 내용과 이유</h2>
-            <p class="section-guide">가장 인상 깊었던 내용이나 문장을 쓰고, 그 이유를 설명하세요.</p>
-          </div>
-          <div class="split-prompts">
-            <div class="mini-prompt">
-              <label for="memorableContent">인상 깊은 내용</label>
-              <textarea class="lined-textarea h-2 fit-text" id="memorableContent" name="memorableContent"></textarea>
-            </div>
-            <div class="mini-prompt">
-              <label for="memorableReason">그 이유</label>
-              <textarea class="lined-textarea h-2 fit-text" id="memorableReason" name="memorableReason"></textarea>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-no">5</div>
-        <div class="section-body">
-          <div class="section-head">
-            <h2 class="section-title">읽기 전과 읽은 후 달라진 생각</h2>
-          </div>
-          <div class="split-prompts">
-            <div class="mini-prompt">
-              <label for="beforeReading">책을 읽기 전 나의 생각</label>
-              <textarea class="lined-textarea h-2 fit-text" id="beforeReading" name="beforeReading"></textarea>
-            </div>
-            <div class="mini-prompt">
-              <label for="afterReading">책을 읽은 후 바뀌거나 깊어진 생각</label>
-              <textarea class="lined-textarea h-2 fit-text" id="afterReading" name="afterReading"></textarea>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-no">6</div>
-        <div class="section-body">
-          <div class="section-head">
-            <h2 class="section-title">나의 질문 또는 더 탐구하고 싶은 점</h2>
-            <p class="section-guide">새롭게 생긴 질문이나 더 알아보고 싶은 주제를 쓰세요.</p>
-          </div>
-          <textarea class="lined-textarea h-2 fit-text" id="question" name="question" aria-label="나의 질문 또는 더 탐구하고 싶은 점"></textarea>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-no">7</div>
-        <div class="section-body">
-          <div class="section-head">
-            <h2 class="section-title">진로·학교생활과의 연결</h2>
-            <p class="section-guide">이 책의 내용이 나의 진로, 지원 학교, 앞으로의 학습 계획과 어떻게 연결되는지 쓰세요.</p>
-          </div>
-          <textarea class="lined-textarea h-2 fit-text" id="connection" name="connection" aria-label="진로 학교생활과의 연결"></textarea>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-no">8</div>
-        <div class="section-body">
-          <div class="section-head">
-            <h2 class="section-title">면접 대비 한 문장</h2>
-            <p class="section-guide">면접에서 이 책을 소개한다면 가장 먼저 말할 한 문장으로 정리하세요.</p>
-          </div>
-          <textarea class="plain-textarea fit-text" id="interviewSentence" name="interviewSentence" aria-label="면접 대비 한 문장"></textarea>
-        </div>
-      </section>
-    </div>
-
-    <div class="footer-note">
-      <span>내용은 구체적으로, 문장은 자신의 말로 작성하세요.</span>
-      <span>작성한 내용은 인쇄 버튼을 눌러 A4로 출력할 수 있습니다.</span>
-    </div>
-  </main>
-
-  <script>
-    (() => {
-      const STORAGE_KEY = 'reading-log-a4-clean-v1';
-      const formElements = [...document.querySelectorAll('input, textarea')];
-      const saveStatus = document.getElementById('saveStatus');
-      let saveTimer;
-
-      function getData() {
-        const data = {};
-        formElements.forEach((el) => {
-          if (el.type === 'radio') {
-            if (el.checked) data[el.name] = el.value;
-          } else {
-            data[el.name || el.id] = el.value;
-          }
-        });
-        return data;
-      }
-
-      function restoreData() {
-        try {
-          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-          formElements.forEach((el) => {
-            const key = el.name || el.id;
-            if (el.type === 'radio') {
-              el.checked = saved[el.name] === el.value;
-            } else if (Object.prototype.hasOwnProperty.call(saved, key)) {
-              el.value = saved[key];
-            }
-          });
-        } catch (_) {
-          localStorage.removeItem(STORAGE_KEY);
-        }
-      }
-
-      function fitText(el) {
-        const max = el.classList.contains('plain-textarea') ? 9.2 : 9.2;
-        const min = 7.2;
-        let size = max;
-        el.style.fontSize = size + 'px';
-        while (el.scrollHeight > el.clientHeight + 1 && size > min) {
-          size -= 0.2;
-          el.style.fontSize = size.toFixed(1) + 'px';
-        }
-      }
-
-      function fitAll() {
-        document.querySelectorAll('.fit-text').forEach(fitText);
-      }
-
-      function saveData() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(getData()));
-        saveStatus.textContent = '저장됨';
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(() => {
-          saveStatus.textContent = '입력한 내용은 이 브라우저에 자동 저장됩니다.';
-        }, 1300);
-      }
-
-      formElements.forEach((el) => {
-        el.addEventListener('input', () => {
-          if (el.matches('.fit-text')) fitText(el);
-          saveData();
-        });
-        el.addEventListener('change', saveData);
-      });
-
-      document.getElementById('printBtn').addEventListener('click', () => {
-        fitAll();
-        window.print();
-      });
-
-      document.getElementById('clearBtn').addEventListener('click', () => {
-        const confirmed = window.confirm('작성한 내용을 모두 지울까요?');
-        if (!confirmed) return;
-
-        formElements.forEach((el) => {
-          if (el.type === 'radio') el.checked = false;
-          else el.value = el.id === 'recordNo' ? '1' : '';
-          if (el.matches('.fit-text')) el.style.fontSize = '';
-        });
-        localStorage.removeItem(STORAGE_KEY);
-        saveStatus.textContent = '모든 내용이 지워졌습니다.';
-      });
-
-      window.addEventListener('beforeprint', fitAll);
-      restoreData();
-      fitAll();
-    })();
-  </script>
+<div aria-label="문서 도구" class="toolbar">
+<div class="toolbar__status" id="saveStatus">입력한 내용은 이 브라우저에 자동 저장됩니다.</div>
+<div class="toolbar__actions">
+<button id="clearBtn" type="button">전체 지우기</button>
+<button id="pdfBtn" type="button">PDF 저장</button>
+<button class="primary" id="printBtn" type="button">A4 인쇄</button>
+</div>
+</div>
+<main class="sheet" id="sheet">
+<header class="header">
+<div>
+<p class="kicker">READING RECORD</p>
+<h1 class="document-title">
+<span class="document-title__label">독서록</span> <span>#</span>
+<input aria-label="독서록 차수" class="record-no" id="recordNo" inputmode="numeric" maxlength="3" name="recordNo" type="text" value="1"/>
+</h1>
+</div>
+<div class="writer-block">
+<label for="writerName">작성자</label>
+<input autocomplete="name" id="writerName" name="writerName" placeholder="이름" type="text"/>
+</div>
+</header>
+<section aria-labelledby="bookInfoTitle" class="book-info">
+<h2 class="info-title" id="bookInfoTitle">1. 도서 정보</h2>
+<div class="info-grid">
+<div class="info-row info-row--three">
+<div class="field">
+<label for="bookTitle">책 제목</label>
+<input class="line-input" id="bookTitle" name="bookTitle" type="text"/>
+</div>
+<div class="field">
+<label for="bookAuthor">저자</label>
+<input class="line-input" id="bookAuthor" name="bookAuthor" type="text"/>
+</div>
+<div class="field">
+<label for="publisher">출판사</label>
+<input class="line-input" id="publisher" name="publisher" type="text"/>
+</div>
+</div>
+<div class="info-row info-row--two">
+<div class="field field--period">
+<span class="field-label">읽은 기간</span>
+<div class="period-inputs">
+<input aria-label="읽기 시작일" class="line-input date-input" id="dateStart" inputmode="numeric" maxlength="10" name="dateStart" placeholder="YYYY.MM.DD" type="text"/>
+<span>부터</span>
+<input aria-label="읽기 종료일" class="line-input date-input" id="dateEnd" inputmode="numeric" maxlength="10" name="dateEnd" placeholder="YYYY.MM.DD" type="text"/>
+</div>
+</div>
+<div class="field">
+<label for="translator">옮긴이</label>
+<input class="line-input" id="translator" name="translator" type="text"/>
+</div>
+</div>
+<div class="info-row info-row--genre">
+<div class="field field--genre">
+<span class="field-label">분야</span>
+<div aria-label="도서 분야" class="genre-row" role="radiogroup">
+<label class="genre-option"><input name="genre" type="radio" value="진로·전공"/>진로·전공</label>
+<label class="genre-option"><input name="genre" type="radio" value="사회·역사"/>사회·역사</label>
+<label class="genre-option"><input name="genre" type="radio" value="과학·수학"/>과학·수학</label>
+<label class="genre-option"><input name="genre" type="radio" value="문학"/>문학</label>
+<label class="genre-option"><input name="genre" type="radio" value="인문·철학"/>인문·철학</label>
+<label class="genre-option"><input name="genre" type="radio" value="기타"/>기타</label>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="sections">
+<section class="section">
+<div class="section-head">
+<div class="section-no">2</div>
+<h2 class="section-title">이 책을 선택한 이유</h2>
+<p class="section-guide">읽게 된 계기나 나의 관심 분야와 연결하여 쓰세요.</p>
+</div>
+<textarea aria-label="이 책을 선택한 이유" class="lined-textarea h-2 fit-text" id="reasonForChoice" name="reasonForChoice"></textarea>
+</section>
+<section class="section">
+<div class="section-head">
+<div class="section-no">3</div>
+<h2 class="section-title">핵심 내용 정리</h2>
+<p class="section-guide">책에서 중요하다고 생각한 내용을 세 가지로 정리하세요.</p>
+</div>
+<div class="takeaway-list">
+<div class="takeaway-row"><span>①</span><textarea aria-label="핵심 내용 1" class="lined-textarea h-1 fit-text" id="keyPoint1" name="keyPoint1"></textarea></div>
+<div class="takeaway-row"><span>②</span><textarea aria-label="핵심 내용 2" class="lined-textarea h-1 fit-text" id="keyPoint2" name="keyPoint2"></textarea></div>
+<div class="takeaway-row"><span>③</span><textarea aria-label="핵심 내용 3" class="lined-textarea h-1 fit-text" id="keyPoint3" name="keyPoint3"></textarea></div>
+</div>
+</section>
+<section class="section">
+<div class="section-head">
+<div class="section-no">4</div>
+<h2 class="section-title">인상 깊은 내용과 이유</h2>
+<p class="section-guide">가장 인상 깊었던 내용이나 문장을 쓰고, 그 이유를 설명하세요.</p>
+</div>
+<div class="prompt-stack">
+<div class="mini-prompt">
+<label for="memorableContent">인상 깊은 내용</label>
+<textarea class="lined-textarea h-2 fit-text" id="memorableContent" name="memorableContent"></textarea>
+</div>
+<div class="mini-prompt">
+<label for="memorableReason">그 이유</label>
+<textarea class="lined-textarea h-2 fit-text" id="memorableReason" name="memorableReason"></textarea>
+</div>
+</div>
+</section>
+<section class="section">
+<div class="section-head">
+<div class="section-no">5</div>
+<h2 class="section-title">읽기 전과 읽은 후 달라진 생각</h2>
+</div>
+<div class="prompt-stack">
+<div class="mini-prompt">
+<label for="beforeReading">책을 읽기 전 나의 생각</label>
+<textarea class="lined-textarea h-2 fit-text" id="beforeReading" name="beforeReading"></textarea>
+</div>
+<div class="mini-prompt">
+<label for="afterReading">읽은 후 바뀌거나 깊어진 생각</label>
+<textarea class="lined-textarea h-2 fit-text" id="afterReading" name="afterReading"></textarea>
+</div>
+</div>
+</section>
+<section class="section">
+<div class="section-head">
+<div class="section-no">6</div>
+<h2 class="section-title">나의 질문 또는 더 탐구하고 싶은 점</h2>
+<p class="section-guide">새롭게 생긴 질문이나 더 알아보고 싶은 주제를 쓰세요.</p>
+</div>
+<textarea aria-label="나의 질문 또는 더 탐구하고 싶은 점" class="lined-textarea h-2 fit-text" id="question" name="question"></textarea>
+</section>
+<section class="section">
+<div class="section-head">
+<div class="section-no">7</div>
+<h2 class="section-title">진로·학교생활과의 연결</h2>
+<p class="section-guide">이 책의 내용이 나의 진로, 지원 학교, 앞으로의 학습 계획과 어떻게 연결되는지 쓰세요.</p>
+</div>
+<textarea aria-label="진로 학교생활과의 연결" class="lined-textarea h-2 fit-text" id="connection" name="connection"></textarea>
+</section>
+<section class="section">
+<div class="section-head">
+<div class="section-no">8</div>
+<h2 class="section-title">면접 대비 한 문장</h2>
+<p class="section-guide">면접에서 이 책을 소개한다면 가장 먼저 말할 한 문장으로 정리하세요.</p>
+</div>
+<textarea aria-label="면접 대비 한 문장" class="plain-textarea fit-text" id="interviewSentence" name="interviewSentence"></textarea>
+</section>
+</div>
+<div class="footer-note">
+<span>내용은 구체적으로, 문장은 자신의 말로 작성하세요.</span>
+<span>PDF 파일명: 작성자_차수.pdf</span>
+</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
