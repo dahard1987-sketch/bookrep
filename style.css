@@ -2,7 +2,7 @@
   --ink: #172033;
   --ink-soft: #40506a;
   --muted: #718096;
-  --rule: #b9c4d2;
+  --rule: #9eacbd;
   --accent: #235a91;
   --accent-dark: #17456f;
   --accent-soft: #eef4fa;
@@ -247,10 +247,13 @@ button, input, textarea { font: inherit; }
   border: 0;
   line-height: var(--writing-line);
   background-color: transparent;
-  background-image: linear-gradient(to bottom, transparent calc(var(--writing-line) - .22mm), var(--rule) 0);
-  background-size: 100% var(--writing-line);
-  background-repeat: repeat-y;
-  background-position: 0 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--writing-line) - .28mm),
+    var(--rule) calc(var(--writing-line) - .28mm),
+    var(--rule) var(--writing-line)
+  );
 }
 
 .lines-2 { height: calc(var(--writing-line) * 2); }
