@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
-  <link href="style.css?v=20260804-2" rel="stylesheet" />
+  <link href="style.css?v=20260804-3" rel="stylesheet" />
 </head>
 <body>
   <div class="toolbar" aria-label="문서 도구">
@@ -74,7 +74,7 @@
             <div class="section-no">2</div>
             <div><h2 class="section-title">이 책을 선택한 이유</h2><p class="section-guide">읽게 된 계기나 나의 관심 분야와 연결하여 쓰세요.</p></div>
           </div>
-          <textarea aria-label="이 책을 선택한 이유" class="lined-textarea lines-4 fit-text" id="reasonForChoice" name="reasonForChoice"></textarea>
+          <div class="ruled-field lines-4"><textarea aria-label="이 책을 선택한 이유" class="lined-textarea fit-text" id="reasonForChoice" name="reasonForChoice"></textarea></div>
         </section>
 
         <section class="section">
@@ -83,9 +83,9 @@
             <div><h2 class="section-title">핵심 내용 정리</h2><p class="section-guide">책에서 중요하다고 생각한 내용을 세 가지로 정리하세요.</p></div>
           </div>
           <div class="takeaway-list">
-            <div class="takeaway-row"><span>①</span><textarea aria-label="핵심 내용 1" class="lined-textarea lines-2 fit-text" id="keyPoint1" name="keyPoint1"></textarea></div>
-            <div class="takeaway-row"><span>②</span><textarea aria-label="핵심 내용 2" class="lined-textarea lines-2 fit-text" id="keyPoint2" name="keyPoint2"></textarea></div>
-            <div class="takeaway-row"><span>③</span><textarea aria-label="핵심 내용 3" class="lined-textarea lines-2 fit-text" id="keyPoint3" name="keyPoint3"></textarea></div>
+            <div class="takeaway-row"><span>①</span><div class="ruled-field lines-2"><textarea aria-label="핵심 내용 1" class="lined-textarea fit-text" id="keyPoint1" name="keyPoint1"></textarea></div></div>
+            <div class="takeaway-row"><span>②</span><div class="ruled-field lines-2"><textarea aria-label="핵심 내용 2" class="lined-textarea fit-text" id="keyPoint2" name="keyPoint2"></textarea></div></div>
+            <div class="takeaway-row"><span>③</span><div class="ruled-field lines-2"><textarea aria-label="핵심 내용 3" class="lined-textarea fit-text" id="keyPoint3" name="keyPoint3"></textarea></div></div>
           </div>
         </section>
 
@@ -95,8 +95,8 @@
             <div><h2 class="section-title">인상 깊은 내용과 이유</h2><p class="section-guide">가장 인상 깊었던 내용이나 문장을 쓰고, 그 이유를 설명하세요.</p></div>
           </div>
           <div class="prompt-stack">
-            <div class="mini-prompt"><label for="memorableContent">인상 깊은 내용</label><textarea class="lined-textarea lines-3 fit-text" id="memorableContent" name="memorableContent"></textarea></div>
-            <div class="mini-prompt"><label for="memorableReason">그 이유</label><textarea class="lined-textarea lines-3 fit-text" id="memorableReason" name="memorableReason"></textarea></div>
+            <div class="mini-prompt"><label for="memorableContent">인상 깊은 내용</label><div class="ruled-field lines-3"><textarea class="lined-textarea fit-text" id="memorableContent" name="memorableContent"></textarea></div></div>
+            <div class="mini-prompt"><label for="memorableReason">그 이유</label><div class="ruled-field lines-3"><textarea class="lined-textarea fit-text" id="memorableReason" name="memorableReason"></textarea></div></div>
           </div>
         </section>
       </div>
@@ -117,19 +117,19 @@
         <section class="section">
           <div class="section-head"><div class="section-no">5</div><div><h2 class="section-title">읽기 전과 읽은 후 달라진 생각</h2><p class="section-guide">책을 읽으며 생각이 어떻게 바뀌거나 깊어졌는지 비교해 보세요.</p></div></div>
           <div class="prompt-stack">
-            <div class="mini-prompt"><label for="beforeReading">책을 읽기 전 나의 생각</label><textarea class="lined-textarea lines-4 fit-text" id="beforeReading" name="beforeReading"></textarea></div>
-            <div class="mini-prompt"><label for="afterReading">읽은 후 바뀌거나 깊어진 생각</label><textarea class="lined-textarea lines-4 fit-text" id="afterReading" name="afterReading"></textarea></div>
+            <div class="mini-prompt"><label for="beforeReading">책을 읽기 전 나의 생각</label><div class="ruled-field lines-4"><textarea class="lined-textarea fit-text" id="beforeReading" name="beforeReading"></textarea></div></div>
+            <div class="mini-prompt"><label for="afterReading">읽은 후 바뀌거나 깊어진 생각</label><div class="ruled-field lines-4"><textarea class="lined-textarea fit-text" id="afterReading" name="afterReading"></textarea></div></div>
           </div>
         </section>
 
         <section class="section">
           <div class="section-head"><div class="section-no">6</div><div><h2 class="section-title">나의 질문 또는 더 탐구하고 싶은 점</h2><p class="section-guide">새롭게 생긴 질문이나 더 알아보고 싶은 주제를 쓰세요.</p></div></div>
-          <textarea aria-label="나의 질문 또는 더 탐구하고 싶은 점" class="lined-textarea lines-4 fit-text" id="question" name="question"></textarea>
+          <div class="ruled-field lines-4"><textarea aria-label="나의 질문 또는 더 탐구하고 싶은 점" class="lined-textarea fit-text" id="question" name="question"></textarea></div>
         </section>
 
         <section class="section">
           <div class="section-head"><div class="section-no">7</div><div><h2 class="section-title">진로·학교생활과의 연결</h2><p class="section-guide">이 책의 내용이 나의 진로, 지원 학교, 앞으로의 학습 계획과 어떻게 연결되는지 쓰세요.</p></div></div>
-          <textarea aria-label="진로 학교생활과의 연결" class="lined-textarea lines-5 fit-text" id="connection" name="connection"></textarea>
+          <div class="ruled-field lines-5"><textarea aria-label="진로 학교생활과의 연결" class="lined-textarea fit-text" id="connection" name="connection"></textarea></div>
         </section>
 
         <section class="section section--last">
