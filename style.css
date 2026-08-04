@@ -243,18 +243,28 @@ button, input, textarea { font: inherit; }
 }
 
 .ruled-field {
+  position: relative;
   width: 100%;
-  background-color: transparent;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent calc(var(--writing-line) - .28mm),
-    var(--rule) calc(var(--writing-line) - .28mm),
-    var(--rule) var(--writing-line)
-  );
+  --line-count: 2;
+}
+
+.rule-lines {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: grid;
+  grid-template-rows: repeat(var(--line-count), minmax(0, 1fr));
+  pointer-events: none;
+}
+
+.rule-lines span {
+  display: block;
+  border-bottom: .25mm solid var(--rule);
 }
 
 .lined-textarea {
+  position: relative;
+  z-index: 1;
   height: 100%;
   padding: 0 1.2mm;
   border: 0;
@@ -262,10 +272,10 @@ button, input, textarea { font: inherit; }
   background: transparent;
 }
 
-.lines-2 { height: calc(var(--writing-line) * 2); }
-.lines-3 { height: calc(var(--writing-line) * 3); }
-.lines-4 { height: calc(var(--writing-line) * 4); }
-.lines-5 { height: calc(var(--writing-line) * 5); }
+.lines-2 { --line-count: 2; height: calc(var(--writing-line) * 2); }
+.lines-3 { --line-count: 3; height: calc(var(--writing-line) * 3); }
+.lines-4 { --line-count: 4; height: calc(var(--writing-line) * 4); }
+.lines-5 { --line-count: 5; height: calc(var(--writing-line) * 5); }
 
 .takeaway-list { display: grid; gap: 1mm; }
 .takeaway-row { display: grid; grid-template-columns: 5mm minmax(0,1fr); align-items: start; }
