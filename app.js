@@ -1,5 +1,15 @@
 (() => {
   const STORAGE_KEY = 'bookrep-reading-record-v2';
+  document.querySelectorAll('.ruled-field').forEach((field) => {
+    const countClass = [...field.classList].find((name) => /^lines-\d+$/.test(name));
+    const count = Number(countClass?.split('-')[1] || 2);
+    const lineLayer = document.createElement('div');
+    lineLayer.className = 'rule-lines';
+    lineLayer.setAttribute('aria-hidden', 'true');
+    for (let index = 0; index < count; index += 1) lineLayer.append(document.createElement('span'));
+    field.prepend(lineLayer);
+  });
+
   const formElements = [...document.querySelectorAll('input, textarea')];
   const textareas = [...document.querySelectorAll('textarea.fit-text')];
   const sheets = [...document.querySelectorAll('.sheet')];
