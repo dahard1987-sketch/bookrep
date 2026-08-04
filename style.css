@@ -242,10 +242,8 @@ button, input, textarea { font: inherit; }
   caret-color: var(--accent);
 }
 
-.lined-textarea {
-  padding: 0 1.2mm;
-  border: 0;
-  line-height: var(--writing-line);
+.ruled-field {
+  width: 100%;
   background-color: transparent;
   background-image: repeating-linear-gradient(
     to bottom,
@@ -254,6 +252,14 @@ button, input, textarea { font: inherit; }
     var(--rule) calc(var(--writing-line) - .28mm),
     var(--rule) var(--writing-line)
   );
+}
+
+.lined-textarea {
+  height: 100%;
+  padding: 0 1.2mm;
+  border: 0;
+  line-height: var(--writing-line);
+  background: transparent;
 }
 
 .lines-2 { height: calc(var(--writing-line) * 2); }
