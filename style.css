@@ -8,7 +8,14 @@
   --accent-soft: #eef4fa;
   --paper: #fff;
   --screen: #e9edf2;
-  --font: "Asta", "Noto Sans KR", "Noto Sans CJK KR", "Malgun Gothic", sans-serif;
+  --border: #aeb9c7;
+  --border-soft: #d4dbe4;
+  --input-line: #8d99a9;
+  --placeholder: #a7b0bc;
+  --surface-subtle: #fbfcfe;
+  --surface-hover: #f6f8fb;
+  --danger: #b3261e;
+  --font: "Noto Sans KR", "Noto Sans CJK KR", "Malgun Gothic", sans-serif;
   --writing-line: 6.6mm;
 }
 
@@ -38,29 +45,29 @@ button, input, textarea { font: inherit; }
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: rgba(255,255,255,.96);
-  border: 1px solid #d5dce5;
+  background: var(--paper);
+  border: 1px solid var(--border-soft);
   border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(16,24,40,.09);
-  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 3px rgba(16,24,40,.08);
 }
 
 .toolbar__status { font-size: 12px; line-height: 1.4; color: var(--muted); }
+.toolbar__status.is-error { color: var(--danger); font-weight: 700; }
 .toolbar__actions { display: flex; gap: 8px; flex: 0 0 auto; }
 
 .toolbar button {
   min-height: 38px;
   padding: 0 14px;
-  border: 1px solid #aeb9c7;
+  border: 1px solid var(--border);
   border-radius: 7px;
-  background: #fff;
+  background: var(--paper);
   color: var(--ink);
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
 }
 
-.toolbar button:hover { background: #f6f8fb; }
+.toolbar button:hover { background: var(--surface-hover); }
 .toolbar button:disabled { opacity: .55; cursor: wait; }
 .toolbar button.primary { border-color: var(--accent); background: var(--accent); color: #fff; }
 .toolbar button.primary:hover { background: var(--accent-dark); }
@@ -75,7 +82,7 @@ button, input, textarea { font: inherit; }
   display: flex;
   flex-direction: column;
   background: var(--paper);
-  box-shadow: 0 12px 36px rgba(16,24,40,.16);
+  box-shadow: 0 4px 14px rgba(16,24,40,.12);
   overflow: hidden;
 }
 
@@ -148,7 +155,7 @@ button, input, textarea { font: inherit; }
   height: 6.5mm;
   padding: 0 .8mm .6mm;
   border: 0;
-  border-bottom: .25mm solid #8d99a9;
+  border-bottom: .25mm solid var(--input-line);
   outline: none;
   background: transparent;
   color: var(--ink);
@@ -198,7 +205,7 @@ button, input, textarea { font: inherit; }
 
 .section {
   padding: 2.5mm 0 2.8mm;
-  border-bottom: .2mm solid #d4dbe4;
+  border-bottom: .2mm solid var(--border-soft);
   break-inside: avoid;
 }
 
@@ -289,7 +296,7 @@ button, input, textarea { font: inherit; }
   height: 16mm;
   padding: 2.2mm 2.5mm;
   border: .22mm solid var(--rule);
-  background: #fbfcfe;
+  background: var(--surface-subtle);
   line-height: 1.55;
 }
 
@@ -300,7 +307,7 @@ button, input, textarea { font: inherit; }
 .page-footer {
   margin-top: auto;
   padding-top: 2mm;
-  border-top: .2mm solid #d4dbe4;
+  border-top: .2mm solid var(--border-soft);
   display: flex;
   justify-content: space-between;
   gap: 8mm;
@@ -309,8 +316,53 @@ button, input, textarea { font: inherit; }
   line-height: 1.3;
 }
 
-input::placeholder, textarea::placeholder { color: #a7b0bc; opacity: 1; }
+input::placeholder, textarea::placeholder { color: var(--placeholder); opacity: 1; }
 input:focus, textarea:focus { background-color: rgba(35,90,145,.045); }
+
+@media screen {
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+/* Screen-only readability: printed/PDF output keeps its exact A4 typography below. */
+@media screen {
+  .sheet:not(.is-exporting) { --writing-line: 34px; }
+
+  .sheet:not(.is-exporting) .kicker { font-size: 10px; }
+  .sheet:not(.is-exporting) .info-title { font-size: 13px; }
+  .sheet:not(.is-exporting) .section-title { font-size: 15px; }
+  .sheet:not(.is-exporting) .section-guide { font-size: 12.5px; line-height: 1.5; }
+
+  .sheet:not(.is-exporting) .writer-block { grid-template-columns: 60px minmax(0,1fr); }
+  .sheet:not(.is-exporting) .field,
+  .sheet:not(.is-exporting) .field--period,
+  .sheet:not(.is-exporting) .field--genre { grid-template-columns: 92px minmax(0,1fr); }
+
+  .sheet:not(.is-exporting) .writer-block label,
+  .sheet:not(.is-exporting) .field label,
+  .sheet:not(.is-exporting) .field-label { font-size: 12.5px; }
+
+  .sheet:not(.is-exporting) .writer-block input,
+  .sheet:not(.is-exporting) .line-input { height: 40px; font-size: 14px; }
+
+  .sheet:not(.is-exporting) .period-inputs { grid-template-columns: minmax(0,1fr) 34px minmax(0,1fr); }
+  .sheet:not(.is-exporting) .period-inputs span { font-size: 12px; }
+
+  .sheet:not(.is-exporting) .genre-row { gap: 5mm; }
+  .sheet:not(.is-exporting) .genre-option { font-size: 12.5px; gap: 1.6mm; }
+  .sheet:not(.is-exporting) .genre-option input { width: 16px; height: 16px; }
+
+  .sheet:not(.is-exporting) .lined-textarea,
+  .sheet:not(.is-exporting) .plain-textarea { font-size: 15px; }
+
+  .sheet:not(.is-exporting) .takeaway-row > span { font-size: 11px; }
+  .sheet:not(.is-exporting) .mini-prompt label { font-size: 12.5px; }
+  .sheet:not(.is-exporting) .page-footer { font-size: 9px; }
+}
 
 @page { size: A4 portrait; margin: 0; }
 
@@ -332,7 +384,7 @@ input:focus, textarea:focus { background-color: rgba(35,90,145,.045); }
   .sheet:last-child { break-after: auto; page-break-after: auto; }
 }
 
-@media (max-width: 840px) {
+@media screen and (max-width: 840px) {
   body { padding: 0; background: #fff; }
   .toolbar { position: static; width: 100%; margin: 0; border-radius: 0; }
   .toolbar__status { display: none; }

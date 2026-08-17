@@ -52,9 +52,16 @@
     writerNameRepeat.textContent = writerName.value.trim() || '';
   }
 
+  function setStatus(message, isError = false) {
+    saveStatus.textContent = message;
+    saveStatus.classList.toggle('is-error', isError);
+  }
+
   function fitText(el) {
-    const max = 10;
-    const min = 7.2;
+    const sheet = el.closest('.sheet');
+    const isOutput = sheet?.classList.contains('is-exporting') || sheet?.classList.contains('is-printing');
+    const max = isOutput ? 10 : 14;
+    const min = isOutput ? 7.2 : 10.5;
     let size = max;
     el.style.fontSize = `${size}px`;
     while (el.scrollHeight > el.clientHeight + 1 && size > min) {
@@ -68,10 +75,10 @@
   function saveData() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(getData()));
     updateRepeatHeader();
-    saveStatus.textContent = '저장됨';
+    setStatus('저장됨');
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
-      saveStatus.textContent = '입력한 내용은 이 브라우저에 자동 저장됩니다.';
+      setStatus('입력한 내용은 이 브라우저에 자동 저장됩니다.');
     }, 1300);
   }
 
@@ -99,14 +106,14 @@
 
   async function savePdf() {
     if (typeof html2canvas === 'undefined' || !window.jspdf?.jsPDF) {
-      alert('PDF 저장 모듈을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.');
+      setStatus('PDF 저장 모듈을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.', true);
       return;
     }
 
     saveData();
     pdfBtn.disabled = true;
     pdfBtn.textContent = 'PDF 생성 중…';
-    saveStatus.textContent = '2쪽 PDF를 만들고 있습니다.';
+    setStatus('2쪽 PDF를 만들고 있습니다.');
     setOutputMode('is-exporting', true);
 
     try {
@@ -124,8 +131,10 @@
           backgroundColor: '#ffffff',
           scrollX: 0,
           scrollY: 0,
-          windowWidth: sheet.scrollWidth,
-          windowHeight: sheet.scrollHeight,
+          // Force the desktop (>840px) layout for the capture so narrow/mobile browser
+          // windows still export the exact A4 layout instead of the stacked mobile view.
+          windowWidth: 900,
+          windowHeight: Math.max(sheet.scrollHeight, 1200),
           logging: false
         });
         if (index > 0) pdf.addPage('a4', 'portrait');
@@ -133,11 +142,10 @@
       }
 
       pdf.save(pdfFilename());
-      saveStatus.textContent = `${pdfFilename()} 저장 완료`;
+      setStatus(`${pdfFilename()} 저장 완료`);
     } catch (error) {
       console.error(error);
-      saveStatus.textContent = 'PDF 저장에 실패했습니다.';
-      alert('PDF 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+      setStatus('PDF 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.', true);
     } finally {
       setOutputMode('is-exporting', false);
       pdfBtn.disabled = false;
@@ -176,7 +184,7 @@
     localStorage.removeItem(STORAGE_KEY);
     updateRepeatHeader();
     fitAll();
-    saveStatus.textContent = '모든 내용이 지워졌습니다.';
+    setStatus('모든 내용이 지워졌습니다.');
   });
 
   window.addEventListener('beforeprint', () => setOutputMode('is-printing', true));
